@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
 
-import { formatLeaveType } from '@/lib/utils/format';
-import type { LeaveBalance, TimeOffRequest } from '@/types';
+import { formatLeaveType } from "@/lib/utils/format";
+import type { LeaveBalance, TimeOffRequest } from "@/types";
 
-import { RequestStatusBadge } from './RequestStatusBadge';
+import { RequestStatusBadge } from "./RequestStatusBadge";
 
 export interface RequestCardProps {
   request: TimeOffRequest;
@@ -16,19 +16,24 @@ export interface RequestCardProps {
 
 function formatDate(date: string): string {
   return new Date(date).toLocaleDateString(undefined, {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 }
 
-export function RequestCard({ request, showBalance, balanceChanged, children }: RequestCardProps) {
+export function RequestCard({
+  request,
+  showBalance,
+  balanceChanged,
+  children,
+}: RequestCardProps) {
   return (
     <article
       className={`rounded-lg border bg-white p-4 shadow-sm dark:bg-zinc-900 ${
         balanceChanged
-          ? 'border-yellow-400 dark:border-yellow-600'
-          : 'border-zinc-200 dark:border-zinc-700'
+          ? "border-yellow-400 dark:border-yellow-600"
+          : "border-zinc-200 dark:border-zinc-700"
       }`}
     >
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -66,11 +71,12 @@ export function RequestCard({ request, showBalance, balanceChanged, children }: 
           role="alert"
           className="mt-3 rounded-md border border-yellow-300 bg-yellow-50 px-3 py-2 text-sm text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-200"
         >
-          Balance changed since this request was submitted. Review before approving.
+          Balance changed since this request was submitted. Review before
+          approving.
         </p>
       )}
 
-      {request.status === 'denied' && request.rejectionReason && (
+      {request.status === "denied" && request.rejectionReason && (
         <p className="mt-3 text-sm text-red-600 dark:text-red-400">
           Reason: {request.rejectionReason}
         </p>

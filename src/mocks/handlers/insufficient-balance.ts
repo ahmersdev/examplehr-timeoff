@@ -1,3 +1,3 @@
-import { createHcmHandlers } from './_create-handlers';
+import { createHcmHandlers } from "./_create-handlers";
 
-export const handlers = createHcmHandlers('insufficient-balance');
+export const handlers = createHcmHandlers("insufficient-balance");

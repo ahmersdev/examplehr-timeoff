@@ -1,3 +1,3 @@
-import { createHcmHandlers } from './_create-handlers';
+import { createHcmHandlers } from "./_create-handlers";
 
-export const handlers = createHcmHandlers('stale');
+export const handlers = createHcmHandlers("stale");

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useState } from "react";
 
 import {
   fetchBalance,
@@ -9,15 +9,15 @@ import {
   submitRequest,
   VerificationError,
   type SubmitRequestInput,
-} from '@/lib/api/hcm';
-import { useAppStore } from '@/store/useAppStore';
+} from "@/lib/api/hcm";
+import { useAppStore } from "@/store/useAppStore";
 
 import {
   deductBalanceInCache,
   restoreBalanceCacheSnapshot,
   snapshotBalanceCache,
-} from './balance-cache';
-import { hcmKeys, hcmMutations } from './query-keys';
+} from "./balance-cache";
+import { hcmKeys, hcmMutations } from "./query-keys";
 
 interface SubmitMutationContext {
   snapshot: ReturnType<typeof snapshotBalanceCache>;
@@ -54,7 +54,13 @@ export function useSubmitRequest() {
 
       const expectedAvailable = (current?.available ?? 0) - days;
 
-      deductBalanceInCache(queryClient, employeeId, locationId, leaveType, days);
+      deductBalanceInCache(
+        queryClient,
+        employeeId,
+        locationId,
+        leaveType,
+        days,
+      );
 
       return { snapshot, expectedAvailable } satisfies SubmitMutationContext;
     },
@@ -74,7 +80,7 @@ export function useSubmitRequest() {
         );
         setIsRolledBack(true);
         throw new VerificationError(
-          'Balance verification failed after submission. Your balance has been restored.',
+          "Balance verification failed after submission. Your balance has been restored.",
           fetched,
         );
       }
@@ -89,7 +95,7 @@ export function useSubmitRequest() {
         queryKey: hcmKeys.requests({ employeeId }),
       });
       await queryClient.invalidateQueries({
-        queryKey: hcmKeys.requests({ status: 'pending' }),
+        queryKey: hcmKeys.requests({ status: "pending" }),
       });
 
       return request;
@@ -111,9 +117,9 @@ export function useSubmitRequest() {
           ? error.message
           : error instanceof Error
             ? error.message
-            : 'Request submission failed.';
+            : "Request submission failed.";
 
-      addNotification({ type: 'error', message });
+      addNotification({ type: "error", message });
     },
   });
 

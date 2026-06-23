@@ -1,28 +1,28 @@
-import { renderHook, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { renderHook, waitFor } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
-import { resetHcmState } from '@/app/api/hcm/_lib/state';
-import { handlers as defaultHandlers } from '@/mocks/handlers/default';
-import { server } from '@/mocks/server';
+import { resetHcmState } from "@/app/api/hcm/_lib/state";
+import { handlers as defaultHandlers } from "@/mocks/handlers/default";
+import { server } from "@/mocks/server";
 import {
   createTestQueryClient,
   createWrapper,
   seedPendingRequest,
-} from '@/tests/test-utils';
+} from "@/tests/test-utils";
 
-import { useDenyRequest } from '../use-deny-request';
+import { useDenyRequest } from "../use-deny-request";
 
-describe('useDenyRequest', () => {
-  it('denies a pending request and restores balance', async () => {
+describe("useDenyRequest", () => {
+  it("denies a pending request and restores balance", async () => {
     server.use(...defaultHandlers);
     resetHcmState();
 
     const request = seedPendingRequest({
-      employeeId: 'emp-bob',
-      locationId: 'loc-london',
-      leaveType: 'annual',
-      startDate: '2026-08-01',
-      endDate: '2026-08-03',
+      employeeId: "emp-bob",
+      locationId: "loc-london",
+      leaveType: "annual",
+      startDate: "2026-08-01",
+      endDate: "2026-08-03",
       days: 3,
     });
 
@@ -34,11 +34,11 @@ describe('useDenyRequest', () => {
 
     await result.current.denyAsync({
       requestId: request.id,
-      employeeId: 'emp-bob',
-      locationId: 'loc-london',
-      leaveType: 'annual',
+      employeeId: "emp-bob",
+      locationId: "loc-london",
+      leaveType: "annual",
       days: 3,
-      rejectionReason: 'Team coverage needed',
+      rejectionReason: "Team coverage needed",
     });
 
     await waitFor(() => expect(result.current.isPending).toBe(false));

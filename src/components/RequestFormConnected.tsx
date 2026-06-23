@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import type { SubmitRequestInput } from '@/lib/api/hcm';
-import { useSubmitRequest } from '@/lib/hooks';
-import { HcmApiError } from '@/lib/api/hcm';
-import { bobBalances } from '@/stories/fixtures';
-import { DEMO_EMPLOYEE } from '@/lib/demo-users';
+import type { SubmitRequestInput } from "@/lib/api/hcm";
+import { useSubmitRequest } from "@/lib/hooks";
+import { HcmApiError } from "@/lib/api/hcm";
+import { bobBalances } from "@/stories/fixtures";
+import { DEMO_EMPLOYEE } from "@/lib/demo-users";
 
-import { RequestForm } from './RequestForm';
+import { RequestForm } from "./RequestForm";
 
 export function RequestFormConnected() {
   const { submitAsync, isOptimistic } = useSubmitRequest();
@@ -23,7 +23,7 @@ export function RequestFormConnected() {
 
       try {
         await submitAsync(input);
-        setSuccessMessage('Request submitted successfully.');
+        setSuccessMessage("Request submitted successfully.");
         setFormKey((key) => key + 1);
       } catch (error) {
         if (error instanceof HcmApiError) {
@@ -31,7 +31,7 @@ export function RequestFormConnected() {
         } else if (error instanceof Error) {
           setServerError(error.message);
         } else {
-          setServerError('Request submission failed.');
+          setServerError("Request submission failed.");
         }
       }
     },

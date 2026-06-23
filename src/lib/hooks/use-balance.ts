@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { fetchBalance } from '@/lib/api/hcm';
+import { fetchBalance } from "@/lib/api/hcm";
 
-import { hcmKeys } from './query-keys';
+import { hcmKeys } from "./query-keys";
 
 export function useBalance(
   employeeId: string,

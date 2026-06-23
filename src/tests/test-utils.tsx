@@ -1,19 +1,19 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, type RenderOptions } from '@testing-library/react';
-import type { ReactElement, ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { render, type RenderOptions } from "@testing-library/react";
+import type { ReactElement, ReactNode } from "react";
 
-import type { Employee } from '@/types';
-import { resetAppStore } from '@/store/reset-app-store';
-import { useAppStore } from '@/store/useAppStore';
+import type { Employee } from "@/types";
+import { resetAppStore } from "@/store/reset-app-store";
+import { useAppStore } from "@/store/useAppStore";
 
-export * from '@/stories/fixtures';
+export * from "@/stories/fixtures";
 export {
   resetStoryEnvironment,
   seedBalanceSnapshot,
   seedPendingRequest,
   triggerAnniversaryDrift,
   triggerReconciliation,
-} from '@/stories/helpers';
+} from "@/stories/helpers";
 
 export function createTestQueryClient() {
   return new QueryClient({
@@ -32,7 +32,10 @@ export function createWrapper(queryClient: QueryClient) {
   };
 }
 
-export interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
+export interface RenderWithProvidersOptions extends Omit<
+  RenderOptions,
+  "wrapper"
+> {
   queryClient?: QueryClient;
   resetStore?: boolean;
   currentUser?: Employee | null;

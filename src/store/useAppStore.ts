@@ -1,8 +1,8 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
-import type { Employee, TimeOffRequest } from '@/types';
+import type { Employee, TimeOffRequest } from "@/types";
 
-export type NotificationType = 'info' | 'warning' | 'error';
+export type NotificationType = "info" | "warning" | "error";
 
 export interface AppNotification {
   id: string;
@@ -19,11 +19,19 @@ interface AppState {
   reconciledAt: string | null;
 
   setCurrentUser: (employee: Employee | null) => void;
-  addNotification: (notification: Omit<AppNotification, 'id' | 'dismissedAt'>) => void;
+  addNotification: (
+    notification: Omit<AppNotification, "id" | "dismissedAt">,
+  ) => void;
   dismissNotification: (id: string) => void;
   addPendingRequest: (request: TimeOffRequest) => void;
-  resolvePendingRequest: (id: string, finalStatus: TimeOffRequest['status']) => void;
-  setRequestBalanceSnapshot: (requestId: string, availableAfterSubmit: number) => void;
+  resolvePendingRequest: (
+    id: string,
+    finalStatus: TimeOffRequest["status"],
+  ) => void;
+  setRequestBalanceSnapshot: (
+    requestId: string,
+    availableAfterSubmit: number,
+  ) => void;
   setReconciledAt: (timestamp: string) => void;
 }
 

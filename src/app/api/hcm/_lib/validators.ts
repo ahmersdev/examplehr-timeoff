@@ -1,10 +1,6 @@
 import type { HCMError } from "@/types";
 
-import {
-  employeeExists,
-  isValidDimension,
-  locationExists,
-} from "./state";
+import { employeeExists, isValidDimension, locationExists } from "./state";
 
 export interface BalanceRequestBody {
   employeeId: string;
@@ -53,12 +49,16 @@ export function parseBalanceRequestBody(
 ): { data: BalanceRequestBody } | { error: HCMError } {
   if (!body || typeof body !== "object") {
     return {
-      error: { code: "INVALID_BODY", message: "Request body must be a JSON object" },
+      error: {
+        code: "INVALID_BODY",
+        message: "Request body must be a JSON object",
+      },
     };
   }
 
   const record = body as Record<string, unknown>;
-  const { employeeId, locationId, leaveType, startDate, endDate, days } = record;
+  const { employeeId, locationId, leaveType, startDate, endDate, days } =
+    record;
 
   if (
     typeof employeeId !== "string" ||
@@ -94,7 +94,10 @@ export function parseAnniversaryBody(
 ): { employeeId: string } | { error: HCMError } {
   if (!body || typeof body !== "object") {
     return {
-      error: { code: "INVALID_BODY", message: "Request body must be a JSON object" },
+      error: {
+        code: "INVALID_BODY",
+        message: "Request body must be a JSON object",
+      },
     };
   }
 

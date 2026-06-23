@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { expect, fn, userEvent, within } from "storybook/test";
 
-import { handlers as defaultHandlers } from '@/mocks/handlers/default';
-import { handlers as insufficientBalanceHandlers } from '@/mocks/handlers/insufficient-balance';
-import { withSeededBobBalances } from '@/stories/decorators';
-import { bobBalances } from '@/stories/fixtures';
-import { DEMO_EMPLOYEE } from '@/lib/demo-users';
+import { handlers as defaultHandlers } from "@/mocks/handlers/default";
+import { handlers as insufficientBalanceHandlers } from "@/mocks/handlers/insufficient-balance";
+import { withSeededBobBalances } from "@/stories/decorators";
+import { bobBalances } from "@/stories/fixtures";
+import { DEMO_EMPLOYEE } from "@/lib/demo-users";
 
-import { RequestForm } from './RequestForm';
-import { RequestFormConnected } from './RequestFormConnected';
+import { RequestForm } from "./RequestForm";
+import { RequestFormConnected } from "./RequestFormConnected";
 
 const meta = {
-  title: 'Components/RequestForm',
+  title: "Components/RequestForm",
   component: RequestForm,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
   args: {
     employeeId: DEMO_EMPLOYEE.id,
@@ -41,11 +41,15 @@ export const InsufficientBalance: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByLabelText('Start Date'), '2026-07-01');
-    await userEvent.type(canvas.getByLabelText('End Date'), '2026-07-15');
+    await userEvent.type(canvas.getByLabelText("Start Date"), "2026-07-01");
+    await userEvent.type(canvas.getByLabelText("End Date"), "2026-07-15");
 
-    await expect(canvas.getByText(/exceeds available balance/)).toBeInTheDocument();
-    await expect(canvas.getByRole('button', { name: 'Submit Request' })).toBeDisabled();
+    await expect(
+      canvas.getByText(/exceeds available balance/),
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("button", { name: "Submit Request" }),
+    ).toBeDisabled();
   },
 };
 
@@ -59,9 +63,11 @@ export const HcmRejected: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByLabelText('Start Date'), '2026-07-01');
-    await userEvent.type(canvas.getByLabelText('End Date'), '2026-07-01');
-    await userEvent.click(canvas.getByRole('button', { name: 'Submit Request' }));
+    await userEvent.type(canvas.getByLabelText("Start Date"), "2026-07-01");
+    await userEvent.type(canvas.getByLabelText("End Date"), "2026-07-01");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Submit Request" }),
+    );
 
     await expect(
       canvas.findByText(/only \d+ available/i),
@@ -80,14 +86,16 @@ export const Success: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await userEvent.type(canvas.getByLabelText('Start Date'), '2026-07-01');
-    await userEvent.type(canvas.getByLabelText('End Date'), '2026-07-01');
-    await userEvent.click(canvas.getByRole('button', { name: 'Submit Request' }));
+    await userEvent.type(canvas.getByLabelText("Start Date"), "2026-07-01");
+    await userEvent.type(canvas.getByLabelText("End Date"), "2026-07-01");
+    await userEvent.click(
+      canvas.getByRole("button", { name: "Submit Request" }),
+    );
 
     await expect(
-      canvas.findByText('Request submitted successfully.'),
+      canvas.findByText("Request submitted successfully."),
     ).resolves.toBeInTheDocument();
-    await expect(canvas.getByLabelText('Start Date')).toHaveValue('');
-    await expect(canvas.getByLabelText('End Date')).toHaveValue('');
+    await expect(canvas.getByLabelText("Start Date")).toHaveValue("");
+    await expect(canvas.getByLabelText("End Date")).toHaveValue("");
   },
 };

@@ -4,7 +4,7 @@ import type {
   HCMRequestResponse,
   LeaveBalance,
   TimeOffRequest,
-} from '@/types';
+} from "@/types";
 
 export class HcmApiError extends Error {
   constructor(
@@ -12,7 +12,7 @@ export class HcmApiError extends Error {
     message: string,
   ) {
     super(message);
-    this.name = 'HcmApiError';
+    this.name = "HcmApiError";
   }
 }
 
@@ -21,8 +21,8 @@ export class BalanceChangedError extends HcmApiError {
     message: string,
     public readonly balance: LeaveBalance | null,
   ) {
-    super('BALANCE_CHANGED', message);
-    this.name = 'BalanceChangedError';
+    super("BALANCE_CHANGED", message);
+    this.name = "BalanceChangedError";
   }
 }
 
@@ -31,8 +31,8 @@ export class VerificationError extends HcmApiError {
     message: string,
     public readonly balance: LeaveBalance | null,
   ) {
-    super('VERIFICATION_FAILED', message);
-    this.name = 'VerificationError';
+    super("VERIFICATION_FAILED", message);
+    this.name = "VerificationError";
   }
 }
 
@@ -48,7 +48,9 @@ export function deserializeBalance(response: HCMBalanceResponse): LeaveBalance {
   };
 }
 
-export function deserializeRequest(response: HCMRequestResponse): TimeOffRequest {
+export function deserializeRequest(
+  response: HCMRequestResponse,
+): TimeOffRequest {
   return {
     id: response.id,
     employeeId: response.employee_id,
@@ -74,7 +76,7 @@ async function parseHcmError(response: Response): Promise<HCMError> {
     // fall through
   }
   return {
-    code: 'UNKNOWN',
+    code: "UNKNOWN",
     message: `Request failed with status ${response.status}`,
   };
 }
@@ -88,8 +90,10 @@ async function handleResponse<T>(response: Response): Promise<T> {
 }
 
 export async function fetchBalances(): Promise<LeaveBalance[]> {
-  const response = await fetch('/api/hcm/balances');
-  const data = await handleResponse<{ balances: HCMBalanceResponse[] }>(response);
+  const response = await fetch("/api/hcm/balances");
+  const data = await handleResponse<{ balances: HCMBalanceResponse[] }>(
+    response,
+  );
   return data.balances.map(deserializeBalance);
 }
 
@@ -113,10 +117,12 @@ export interface SubmitRequestInput {
   days: number;
 }
 
-export async function submitRequest(input: SubmitRequestInput): Promise<TimeOffRequest> {
-  const response = await fetch('/api/hcm/balance/request', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+export async function submitRequest(
+  input: SubmitRequestInput,
+): Promise<TimeOffRequest> {
+  const response = await fetch("/api/hcm/balance/request", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
   const data = await handleResponse<HCMRequestResponse>(response);
@@ -130,9 +136,11 @@ export interface ApproveRequestResult {
   balance: LeaveBalance | null;
 }
 
-export async function approveRequest(requestId: string): Promise<ApproveRequestResult> {
+export async function approveRequest(
+  requestId: string,
+): Promise<ApproveRequestResult> {
   const response = await fetch(`/api/hcm/request/${requestId}/approve`, {
-    method: 'POST',
+    method: "POST",
   });
   const data = await handleResponse<{
     conflict: boolean;
@@ -159,8 +167,8 @@ export async function denyRequest(
   rejectionReason?: string,
 ): Promise<DenyRequestResult> {
   const response = await fetch(`/api/hcm/request/${requestId}/deny`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(rejectionReason ? { rejectionReason } : {}),
   });
   const data = await handleResponse<{
@@ -176,7 +184,7 @@ export async function denyRequest(
 
 export interface FetchRequestsParams {
   employeeId?: string;
-  status?: 'pending';
+  status?: "pending";
 }
 
 export async function fetchRequests(
@@ -184,13 +192,15 @@ export async function fetchRequests(
 ): Promise<TimeOffRequest[]> {
   const searchParams = new URLSearchParams();
   if (params.employeeId) {
-    searchParams.set('employeeId', params.employeeId);
+    searchParams.set("employeeId", params.employeeId);
   }
   if (params.status) {
-    searchParams.set('status', params.status);
+    searchParams.set("status", params.status);
   }
 
   const response = await fetch(`/api/hcm/requests?${searchParams}`);
-  const data = await handleResponse<{ requests: HCMRequestResponse[] }>(response);
+  const data = await handleResponse<{ requests: HCMRequestResponse[] }>(
+    response,
+  );
   return data.requests.map(deserializeRequest);
 }

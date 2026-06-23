@@ -1,4 +1,4 @@
-import { useAppStore } from '@/store/useAppStore';
+import { useAppStore } from "@/store/useAppStore";
 
 export function resetAppStore(): void {
   useAppStore.setState({

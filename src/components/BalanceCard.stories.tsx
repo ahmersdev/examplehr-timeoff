@@ -1,15 +1,15 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import { bobAnnualBalance, staleTimestamp } from '@/stories/fixtures';
+import { bobAnnualBalance, staleTimestamp } from "@/stories/fixtures";
 
-import { BalanceCard } from './BalanceCard';
+import { BalanceCard } from "./BalanceCard";
 
 const meta = {
-  title: 'Components/BalanceCard',
+  title: "Components/BalanceCard",
   component: BalanceCard,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
 } satisfies Meta<typeof BalanceCard>;
 
@@ -19,7 +19,7 @@ type Story = StoryObj<typeof meta>;
 export const Synced: Story = {
   args: {
     balance: bobAnnualBalance,
-    syncStatus: 'synced',
+    syncStatus: "synced",
   },
 };
 
@@ -29,21 +29,21 @@ export const Stale: Story = {
       ...bobAnnualBalance,
       lastSyncedAt: staleTimestamp(30),
     },
-    syncStatus: 'stale',
+    syncStatus: "stale",
   },
 };
 
 export const Syncing: Story = {
   args: {
     balance: bobAnnualBalance,
-    syncStatus: 'syncing',
+    syncStatus: "syncing",
   },
 };
 
 export const Error: Story = {
   args: {
     balance: bobAnnualBalance,
-    syncStatus: 'error',
+    syncStatus: "error",
   },
 };
 
@@ -54,7 +54,7 @@ export const OptimisticPending: Story = {
       available: bobAnnualBalance.available - 3,
       used: bobAnnualBalance.used + 3,
     },
-    syncStatus: 'synced',
+    syncStatus: "synced",
     isOptimistic: true,
   },
 };
@@ -73,7 +73,7 @@ export const OptimisticRolledBack: Story = {
   ),
   args: {
     balance: bobAnnualBalance,
-    syncStatus: 'synced',
+    syncStatus: "synced",
     isOptimistic: false,
   },
 };

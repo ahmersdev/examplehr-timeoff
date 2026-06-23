@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { fetchRequests } from '@/lib/api/hcm';
+import { fetchRequests } from "@/lib/api/hcm";
 
-import { hcmKeys } from './query-keys';
+import { hcmKeys } from "./query-keys";
 
 export function useRequests(employeeId: string) {
   const query = useQuery({
@@ -23,8 +23,8 @@ export function useRequests(employeeId: string) {
 
 export function usePendingRequests() {
   const query = useQuery({
-    queryKey: hcmKeys.requests({ status: 'pending' }),
-    queryFn: () => fetchRequests({ status: 'pending' }),
+    queryKey: hcmKeys.requests({ status: "pending" }),
+    queryFn: () => fetchRequests({ status: "pending" }),
     refetchInterval: 10_000,
   });
 

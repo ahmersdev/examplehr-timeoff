@@ -242,8 +242,8 @@ export function updateRequest(
 }
 
 export function getAllRequests(): TimeOffRequest[] {
-  return Array.from(state.requests.values()).sort(
-    (a, b) => b.submittedAt.localeCompare(a.submittedAt),
+  return Array.from(state.requests.values()).sort((a, b) =>
+    b.submittedAt.localeCompare(a.submittedAt),
   );
 }
 

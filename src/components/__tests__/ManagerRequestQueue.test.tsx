@@ -1,14 +1,14 @@
-import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
-import { bobAnnualBalance, pendingBobRequest } from '@/tests/test-utils';
+import { bobAnnualBalance, pendingBobRequest } from "@/tests/test-utils";
 
-import { ManagerRequestQueue } from '../ManagerRequestQueue';
+import { ManagerRequestQueue } from "../ManagerRequestQueue";
 
-describe('ManagerRequestQueue', () => {
+describe("ManagerRequestQueue", () => {
   afterEach(() => cleanup());
 
-  it('shows warning when balance has changed since request submitted', () => {
+  it("shows warning when balance has changed since request submitted", () => {
     render(
       <ManagerRequestQueue
         requests={[pendingBobRequest]}
@@ -30,7 +30,7 @@ describe('ManagerRequestQueue', () => {
     ).toBeInTheDocument();
   });
 
-  it('calls onApprove with correct request id', () => {
+  it("calls onApprove with correct request id", () => {
     const onApprove = vi.fn();
 
     render(
@@ -43,12 +43,12 @@ describe('ManagerRequestQueue', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Approve' }));
+    fireEvent.click(screen.getByRole("button", { name: "Approve" }));
 
     expect(onApprove).toHaveBeenCalledWith(pendingBobRequest.id);
   });
 
-  it('calls onDeny with correct request id', () => {
+  it("calls onDeny with correct request id", () => {
     const onDeny = vi.fn();
 
     render(
@@ -61,12 +61,12 @@ describe('ManagerRequestQueue', () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole('button', { name: 'Deny' }));
+    fireEvent.click(screen.getByRole("button", { name: "Deny" }));
 
     expect(onDeny).toHaveBeenCalledWith(pendingBobRequest.id);
   });
 
-  it('disables approve and deny while balance is loading', () => {
+  it("disables approve and deny while balance is loading", () => {
     render(
       <ManagerRequestQueue
         requests={[pendingBobRequest]}
@@ -77,7 +77,7 @@ describe('ManagerRequestQueue', () => {
       />,
     );
 
-    expect(screen.getByRole('button', { name: 'Approve' })).toBeDisabled();
-    expect(screen.getByRole('button', { name: 'Deny' })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Approve" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Deny" })).toBeDisabled();
   });
 });

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { denyRequest } from '@/lib/api/hcm';
+import { denyRequest } from "@/lib/api/hcm";
 
 import {
   patchBalanceInCache,
   restoreBalanceCacheSnapshot,
   restoreBalanceInCache,
   snapshotBalanceCache,
-} from './balance-cache';
-import { hcmKeys, hcmMutations } from './query-keys';
+} from "./balance-cache";
+import { hcmKeys, hcmMutations } from "./query-keys";
 
 export interface DenyRequestInput {
   requestId: string;
@@ -40,7 +40,13 @@ export function useDenyRequest() {
         leaveType,
       );
 
-      restoreBalanceInCache(queryClient, employeeId, locationId, leaveType, days);
+      restoreBalanceInCache(
+        queryClient,
+        employeeId,
+        locationId,
+        leaveType,
+        days,
+      );
 
       return { snapshot };
     },
@@ -55,7 +61,7 @@ export function useDenyRequest() {
         );
       }
       await queryClient.invalidateQueries({
-        queryKey: hcmKeys.requests({ status: 'pending' }),
+        queryKey: hcmKeys.requests({ status: "pending" }),
       });
       await queryClient.invalidateQueries({
         queryKey: hcmKeys.requests({ employeeId: input.employeeId }),

@@ -1,20 +1,22 @@
-'use client';
+"use client";
 
-import type { QueryClient } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
+import type { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 
-import { fetchBalances } from '@/lib/api/hcm';
-import { useAppStore } from '@/store/useAppStore';
-import type { AppNotification } from '@/store/useAppStore';
+import { fetchBalances } from "@/lib/api/hcm";
+import { useAppStore } from "@/store/useAppStore";
+import type { AppNotification } from "@/store/useAppStore";
 
-import { detectDrift, setBalancesInCache } from './balance-cache';
-import { hcmKeys, hcmMutations } from './query-keys';
+import { detectDrift, setBalancesInCache } from "./balance-cache";
+import { hcmKeys, hcmMutations } from "./query-keys";
 
 export const RECONCILE_INTERVAL_MS = 60_000;
 
 interface ReconcileCallbacks {
-  addNotification: (notification: Omit<AppNotification, 'id' | 'dismissedAt'>) => void;
+  addNotification: (
+    notification: Omit<AppNotification, "id" | "dismissedAt">,
+  ) => void;
   setReconciledAt: (timestamp: string) => void;
 }
 
@@ -27,14 +29,18 @@ export async function reconcileEmployeeBalances(
     return false;
   }
 
-  const fresh = (await fetchBalances()).filter((b) => b.employeeId === employeeId);
-  const cached = queryClient.getQueryData<typeof fresh>(hcmKeys.balances(employeeId));
+  const fresh = (await fetchBalances()).filter(
+    (b) => b.employeeId === employeeId,
+  );
+  const cached = queryClient.getQueryData<typeof fresh>(
+    hcmKeys.balances(employeeId),
+  );
 
   if (detectDrift(cached, fresh)) {
     setBalancesInCache(queryClient, employeeId, fresh);
     addNotification({
-      type: 'info',
-      message: 'Your leave balance was updated',
+      type: "info",
+      message: "Your leave balance was updated",
     });
   }
 

@@ -1,1 +1,1 @@
-export { handlers } from './handlers/default';
+export { handlers } from "./handlers/default";

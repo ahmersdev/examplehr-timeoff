@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
-import type { LeaveBalance, TimeOffRequest } from '@/types';
+import type { LeaveBalance, TimeOffRequest } from "@/types";
 
-import { RequestCard } from './RequestCard';
+import { RequestCard } from "./RequestCard";
+import { SectionSpinner } from "./SectionSpinner";
 
 export interface ManagerRequestQueueProps {
   requests: TimeOffRequest[];
@@ -47,13 +48,15 @@ export function ManagerRequestQueue({
 
   return (
     <div className="space-y-4">
+      {isLoadingBalance && <SectionSpinner label="Loading live balances" />}
+
       {hasBalanceWarnings && (
         <div
           role="alert"
           className="rounded-md border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800 dark:border-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-200"
         >
-          Balance changed since one or more requests were submitted. Review before
-          approving.
+          Balance changed since one or more requests were submitted. Review
+          before approving.
         </div>
       )}
 
@@ -64,7 +67,7 @@ export function ManagerRequestQueue({
           request.locationId,
           request.leaveType,
         );
-        const isPending = request.status === 'pending';
+        const isPending = request.status === "pending";
         const actionsDisabled = isLoadingBalance || !isPending;
 
         return (

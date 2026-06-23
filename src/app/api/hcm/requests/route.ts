@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import {
-  getPendingRequests,
-  getRequestsByEmployee,
-} from "../_lib/state";
+import { getPendingRequests, getRequestsByEmployee } from "../_lib/state";
 import { serializeRequest } from "../_lib/serializers";
 
 export async function GET(request: NextRequest) {

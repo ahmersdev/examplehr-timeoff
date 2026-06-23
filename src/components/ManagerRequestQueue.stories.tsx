@@ -1,20 +1,20 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { fn } from 'storybook/test';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { fn } from "storybook/test";
 
 import {
   bobAnnualBalance,
   multiplePendingRequests,
   pendingBobRequest,
-} from '@/stories/fixtures';
+} from "@/stories/fixtures";
 
-import { ManagerRequestQueue } from './ManagerRequestQueue';
+import { ManagerRequestQueue } from "./ManagerRequestQueue";
 
 const meta = {
-  title: 'Components/ManagerRequestQueue',
+  title: "Components/ManagerRequestQueue",
   component: ManagerRequestQueue,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
   args: {
     onApprove: fn(),
@@ -39,9 +39,9 @@ export const QueueWithMultipleRequests: Story = {
     balances: [
       bobAnnualBalance,
       {
-        employeeId: 'emp-alice',
-        locationId: 'loc-nyc',
-        leaveType: 'personal',
+        employeeId: "emp-alice",
+        locationId: "loc-nyc",
+        leaveType: "personal",
         available: 3,
         used: 0,
         total: 3,
@@ -74,8 +74,8 @@ export const ApprovalConflict: Story = {
         role="alert"
         className="rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-700 dark:bg-red-900/30 dark:text-red-200"
       >
-        Balance changed externally while request was pending (e.g. anniversary bonus
-        applied)
+        Balance changed externally while request was pending (e.g. anniversary
+        bonus applied)
       </p>
       <ManagerRequestQueue {...args} />
     </div>

@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useQuery } from '@tanstack/react-query';
-import { useMemo } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 
-import { fetchBalances } from '@/lib/api/hcm';
-import type { LeaveBalance, SyncStatus } from '@/types';
+import { fetchBalances } from "@/lib/api/hcm";
+import type { LeaveBalance, SyncStatus } from "@/types";
 
-import { hcmKeys } from './query-keys';
+import { hcmKeys } from "./query-keys";
 
 const STALE_THRESHOLD_MS = 5 * 60 * 1000;
 
@@ -17,22 +17,27 @@ function deriveSyncStatus(
   balances: LeaveBalance[] | undefined,
   isStale: boolean,
 ): SyncStatus {
-  if (isError) return 'error';
-  if (isFetching && !isLoading) return 'syncing';
+  if (isError) return "error";
+  if (isFetching && !isLoading) return "syncing";
 
   const hasOldSync =
-    balances?.some((b) => Date.now() - new Date(b.lastSyncedAt).getTime() > STALE_THRESHOLD_MS) ??
-    false;
+    balances?.some(
+      (b) =>
+        Date.now() - new Date(b.lastSyncedAt).getTime() > STALE_THRESHOLD_MS,
+    ) ?? false;
 
-  if (isStale || hasOldSync) return 'stale';
-  return 'synced';
+  if (isStale || hasOldSync) return "stale";
+  return "synced";
 }
 
-function deriveLastSyncedAt(balances: LeaveBalance[] | undefined): string | null {
+function deriveLastSyncedAt(
+  balances: LeaveBalance[] | undefined,
+): string | null {
   if (!balances?.length) return null;
-  return balances.reduce((latest, b) =>
-    b.lastSyncedAt > latest ? b.lastSyncedAt : latest,
-  balances[0].lastSyncedAt);
+  return balances.reduce(
+    (latest, b) => (b.lastSyncedAt > latest ? b.lastSyncedAt : latest),
+    balances[0].lastSyncedAt,
+  );
 }
 
 export function useBalances(employeeId: string) {
@@ -55,7 +60,13 @@ export function useBalances(employeeId: string) {
         query.data,
         query.isStale,
       ),
-    [query.isError, query.isFetching, query.isLoading, query.data, query.isStale],
+    [
+      query.isError,
+      query.isFetching,
+      query.isLoading,
+      query.data,
+      query.isStale,
+    ],
   );
 
   const lastSyncedAt = useMemo(

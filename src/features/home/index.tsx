@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
-import { DEMO_EMPLOYEE, DEMO_MANAGER } from '@/lib/demo-users';
-import { useAppStore } from '@/store/useAppStore';
+import { DEMO_EMPLOYEE, DEMO_MANAGER } from "@/lib/demo-users";
+import { useAppStore } from "@/store/useAppStore";
 
 const Home = () => {
   const router = useRouter();
@@ -11,12 +11,12 @@ const Home = () => {
 
   function selectEmployee() {
     setCurrentUser(DEMO_EMPLOYEE);
-    router.push('/employee');
+    router.push("/employee");
   }
 
   function selectManager() {
     setCurrentUser(DEMO_MANAGER);
-    router.push('/manager');
+    router.push("/manager");
   }
 
   return (

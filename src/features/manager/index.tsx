@@ -1,23 +1,24 @@
-'use client';
+"use client";
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   BackToHome,
   ManagerRequestQueue,
   NotificationToast,
+  SectionSpinner,
   SyncStatusBar,
-} from '@/components';
+} from "@/components";
 import {
   useApproveRequest,
   useBalance,
   useBalances,
   useDenyRequest,
   usePendingRequests,
-} from '@/lib/hooks';
-import { useAppStore, useCurrentUser } from '@/store/useAppStore';
-import type { LeaveBalance, TimeOffRequest } from '@/types';
+} from "@/lib/hooks";
+import { useAppStore, useCurrentUser } from "@/store/useAppStore";
+import type { LeaveBalance, TimeOffRequest } from "@/types";
 
 function ManagerRequestBalanceLoader({
   request,
@@ -55,18 +56,28 @@ const Manager = () => {
   const notifications = useAppStore((s) => s.notifications);
   const dismissNotification = useAppStore((s) => s.dismissNotification);
 
-  const { requests: pendingRequests, refetch: refetchPending } = usePendingRequests();
-  const { syncStatus, lastSyncedAt, refetch } = useBalances(currentUser?.id ?? '');
+  const {
+    requests: pendingRequests,
+    isLoading: isLoadingPending,
+    refetch: refetchPending,
+  } = usePendingRequests();
+  const { syncStatus, lastSyncedAt, refetch } = useBalances(
+    currentUser?.id ?? "",
+  );
   const { approve, conflictError, reset: resetApprove } = useApproveRequest();
   const { deny } = useDenyRequest();
 
-  const [liveBalances, setLiveBalances] = useState<Record<string, LeaveBalance>>({});
-  const [loadingBalanceIds, setLoadingBalanceIds] = useState<Set<string>>(new Set());
+  const [liveBalances, setLiveBalances] = useState<
+    Record<string, LeaveBalance>
+  >({});
+  const [loadingBalanceIds, setLoadingBalanceIds] = useState<Set<string>>(
+    new Set(),
+  );
   const [hiddenIds, setHiddenIds] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (!currentUser) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [currentUser, router]);
 
@@ -77,17 +88,20 @@ const Manager = () => {
     [],
   );
 
-  const handleLoadingChange = useCallback((requestId: string, isLoading: boolean) => {
-    setLoadingBalanceIds((prev) => {
-      const next = new Set(prev);
-      if (isLoading) {
-        next.add(requestId);
-      } else {
-        next.delete(requestId);
-      }
-      return next;
-    });
-  }, []);
+  const handleLoadingChange = useCallback(
+    (requestId: string, isLoading: boolean) => {
+      setLoadingBalanceIds((prev) => {
+        const next = new Set(prev);
+        if (isLoading) {
+          next.add(requestId);
+        } else {
+          next.delete(requestId);
+        }
+        return next;
+      });
+    },
+    [],
+  );
 
   const visibleRequests = useMemo(
     () => pendingRequests.filter((r) => !hiddenIds.has(r.id)),
@@ -130,7 +144,7 @@ const Manager = () => {
         },
         {
           onSuccess: () => {
-            resolvePendingRequest(requestId, 'approved');
+            resolvePendingRequest(requestId, "approved");
             void refetchPending();
           },
           onError: () => {
@@ -144,7 +158,13 @@ const Manager = () => {
         },
       );
     },
-    [pendingRequests, approve, resolvePendingRequest, refetchPending, resetApprove],
+    [
+      pendingRequests,
+      approve,
+      resolvePendingRequest,
+      refetchPending,
+      resetApprove,
+    ],
   );
 
   const handleDeny = useCallback(
@@ -164,7 +184,7 @@ const Manager = () => {
         },
         {
           onSuccess: () => {
-            resolvePendingRequest(requestId, 'denied');
+            resolvePendingRequest(requestId, "denied");
             void refetchPending();
           },
           onError: () => {
@@ -213,23 +233,35 @@ const Manager = () => {
           </p>
         )}
 
-        {visibleRequests.map((request) => (
-          <ManagerRequestBalanceLoader
-            key={request.id}
-            request={request}
-            onBalanceLoaded={handleBalanceLoaded}
-            onLoadingChange={handleLoadingChange}
-          />
-        ))}
+        <section className="space-y-4">
+          <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
+            Pending Approvals
+          </h2>
 
-        <ManagerRequestQueue
-          requests={visibleRequests}
-          balances={balancesForQueue}
-          balanceChangedFlags={balanceChangedFlags}
-          onApprove={handleApprove}
-          onDeny={handleDeny}
-          isLoadingBalance={isLoadingBalance}
-        />
+          {isLoadingPending ? (
+            <SectionSpinner label="Loading pending approvals" />
+          ) : (
+            <>
+              {visibleRequests.map((request) => (
+                <ManagerRequestBalanceLoader
+                  key={request.id}
+                  request={request}
+                  onBalanceLoaded={handleBalanceLoaded}
+                  onLoadingChange={handleLoadingChange}
+                />
+              ))}
+
+              <ManagerRequestQueue
+                requests={visibleRequests}
+                balances={balancesForQueue}
+                balanceChangedFlags={balanceChangedFlags}
+                onApprove={handleApprove}
+                onDeny={handleDeny}
+                isLoadingBalance={isLoadingBalance}
+              />
+            </>
+          )}
+        </section>
       </main>
 
       <NotificationToast

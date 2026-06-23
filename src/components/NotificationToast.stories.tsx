@@ -1,21 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
-import { fn } from 'storybook/test';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { fn } from "storybook/test";
 
 import {
   balanceChangedNotification,
   balanceRefreshedNotification,
   requestRolledBackNotification,
   stackedNotifications,
-} from '@/stories/fixtures';
+} from "@/stories/fixtures";
 
-import { NotificationToast } from './NotificationToast';
+import { NotificationToast } from "./NotificationToast";
 
 const meta = {
-  title: 'Components/NotificationToast',
+  title: "Components/NotificationToast",
   component: NotificationToast,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
   args: {
     onDismiss: fn(),

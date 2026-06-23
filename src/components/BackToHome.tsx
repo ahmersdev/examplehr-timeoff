@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 
 export function BackToHome() {
   const router = useRouter();
@@ -8,7 +8,7 @@ export function BackToHome() {
   return (
     <button
       type="button"
-      onClick={() => router.push('/')}
+      onClick={() => router.push("/")}
       className="mb-3 inline-flex cursor-pointer items-center gap-1 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
     >
       ← Back

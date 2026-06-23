@@ -1,20 +1,16 @@
-import type { Meta, StoryObj } from '@storybook/nextjs-vite';
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 
-import {
-  aliceBalances,
-  allBalances,
-  bobBalances,
-} from '@/stories/fixtures';
+import { aliceBalances, allBalances, bobBalances } from "@/stories/fixtures";
 
-import { BalanceCard } from './BalanceCard';
-import { BalanceGrid } from './BalanceGrid';
+import { BalanceCard } from "./BalanceCard";
+import { BalanceGrid } from "./BalanceGrid";
 
 const meta = {
-  title: 'Components/BalanceGrid',
+  title: "Components/BalanceGrid",
   component: BalanceGrid,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
 } satisfies Meta<typeof BalanceGrid>;
 
@@ -28,20 +24,28 @@ export const MultipleLocationsAllSynced: Story = {
         <h3 className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           London
         </h3>
-        <BalanceGrid balances={allBalances} syncStatus="synced" locationId="loc-london" />
+        <BalanceGrid
+          balances={allBalances}
+          syncStatus="synced"
+          locationId="loc-london"
+        />
       </section>
       <section>
         <h3 className="mb-3 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           New York
         </h3>
-        <BalanceGrid balances={allBalances} syncStatus="synced" locationId="loc-nyc" />
+        <BalanceGrid
+          balances={allBalances}
+          syncStatus="synced"
+          locationId="loc-nyc"
+        />
       </section>
     </div>
   ),
   args: {
     balances: allBalances,
-    syncStatus: 'synced',
-    locationId: 'loc-london',
+    syncStatus: "synced",
+    locationId: "loc-london",
   },
 };
 
@@ -56,15 +60,15 @@ export const MixedSyncStatuses: Story = {
   ),
   args: {
     balances: allBalances,
-    syncStatus: 'synced',
-    locationId: 'loc-london',
+    syncStatus: "synced",
+    locationId: "loc-london",
   },
 };
 
 export const Empty: Story = {
   args: {
     balances: [],
-    syncStatus: 'synced',
-    locationId: 'loc-london',
+    syncStatus: "synced",
+    locationId: "loc-london",
   },
 };

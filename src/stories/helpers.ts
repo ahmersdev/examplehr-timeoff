@@ -2,17 +2,17 @@ import {
   createRequest,
   deductBalance,
   resetHcmState,
-} from '@/app/api/hcm/_lib/state';
-import { fetchBalance, fetchBalances } from '@/lib/api/hcm';
-import { detectDrift, setBalancesInCache } from '@/lib/hooks/balance-cache';
-import { hcmKeys } from '@/lib/hooks/query-keys';
-import { getQueryClient } from '@/lib/queryClient';
-import { resetAppStore } from '@/store/reset-app-store';
-import { useAppStore } from '@/store/useAppStore';
-import type { TimeOffRequest } from '@/types';
-import { http, HttpResponse } from 'msw';
+} from "@/app/api/hcm/_lib/state";
+import { fetchBalance, fetchBalances } from "@/lib/api/hcm";
+import { detectDrift, setBalancesInCache } from "@/lib/hooks/balance-cache";
+import { hcmKeys } from "@/lib/hooks/query-keys";
+import { getQueryClient } from "@/lib/queryClient";
+import { resetAppStore } from "@/store/reset-app-store";
+import { useAppStore } from "@/store/useAppStore";
+import type { TimeOffRequest } from "@/types";
+import { http, HttpResponse } from "msw";
 
-import { handlers as defaultHandlers } from '@/mocks/handlers/default';
+import { handlers as defaultHandlers } from "@/mocks/handlers/default";
 
 export function resetStoryEnvironment(): void {
   resetHcmState();
@@ -29,7 +29,9 @@ export interface SeedPendingRequestInput {
   days: number;
 }
 
-export function seedPendingRequest(input: SeedPendingRequestInput): TimeOffRequest {
+export function seedPendingRequest(
+  input: SeedPendingRequestInput,
+): TimeOffRequest {
   const request = createRequest({
     employeeId: input.employeeId,
     locationId: input.locationId,
@@ -38,12 +40,22 @@ export function seedPendingRequest(input: SeedPendingRequestInput): TimeOffReque
     endDate: input.endDate,
     days: input.days,
   });
-  deductBalance(input.employeeId, input.locationId, input.leaveType, input.days);
+  deductBalance(
+    input.employeeId,
+    input.locationId,
+    input.leaveType,
+    input.days,
+  );
   return request;
 }
 
-export function seedBalanceSnapshot(requestId: string, availableAfterSubmit: number): void {
-  useAppStore.getState().setRequestBalanceSnapshot(requestId, availableAfterSubmit);
+export function seedBalanceSnapshot(
+  requestId: string,
+  availableAfterSubmit: number,
+): void {
+  useAppStore
+    .getState()
+    .setRequestBalanceSnapshot(requestId, availableAfterSubmit);
 }
 
 export async function triggerAnniversaryDrift(
@@ -58,26 +70,32 @@ export async function triggerAnniversaryDrift(
 
 export async function triggerReconciliation(employeeId: string): Promise<void> {
   const queryClient = getQueryClient();
-  const fresh = (await fetchBalances()).filter((b) => b.employeeId === employeeId);
-  const cached = queryClient.getQueryData<typeof fresh>(hcmKeys.balances(employeeId));
+  const fresh = (await fetchBalances()).filter(
+    (b) => b.employeeId === employeeId,
+  );
+  const cached = queryClient.getQueryData<typeof fresh>(
+    hcmKeys.balances(employeeId),
+  );
 
   if (detectDrift(cached, fresh)) {
     setBalancesInCache(queryClient, employeeId, fresh);
     useAppStore.getState().addNotification({
-      type: 'info',
-      message: 'Your leave balance was updated',
+      type: "info",
+      message: "Your leave balance was updated",
     });
   }
 
   useAppStore.getState().setReconciledAt(new Date().toISOString());
-  await queryClient.invalidateQueries({ queryKey: hcmKeys.balances(employeeId) });
+  await queryClient.invalidateQueries({
+    queryKey: hcmKeys.balances(employeeId),
+  });
 }
 
 export const approveErrorHandlers = [
   ...defaultHandlers.slice(0, 4),
-  http.post('/api/hcm/request/:id/approve', () =>
+  http.post("/api/hcm/request/:id/approve", () =>
     HttpResponse.json(
-      { code: 'SERVICE_UNAVAILABLE', message: 'HCM approval unavailable' },
+      { code: "SERVICE_UNAVAILABLE", message: "HCM approval unavailable" },
       { status: 503 },
     ),
   ),

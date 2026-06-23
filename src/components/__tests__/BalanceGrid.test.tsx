@@ -1,14 +1,14 @@
-import { cleanup, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { cleanup, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
 
-import { bobBalances } from '@/tests/test-utils';
+import { bobBalances } from "@/tests/test-utils";
 
-import { BalanceGrid } from '../BalanceGrid';
+import { BalanceGrid } from "../BalanceGrid";
 
-describe('BalanceGrid', () => {
+describe("BalanceGrid", () => {
   afterEach(() => cleanup());
 
-  it('filters balances by location', () => {
+  it("filters balances by location", () => {
     render(
       <BalanceGrid
         balances={bobBalances}
@@ -17,11 +17,11 @@ describe('BalanceGrid', () => {
       />,
     );
 
-    expect(screen.getByText('Annual Leave')).toBeInTheDocument();
-    expect(screen.getByText('Sick Leave')).toBeInTheDocument();
+    expect(screen.getByText("Annual Leave")).toBeInTheDocument();
+    expect(screen.getByText("Sick Leave")).toBeInTheDocument();
   });
 
-  it('shows empty state when no balances match location', () => {
+  it("shows empty state when no balances match location", () => {
     render(
       <BalanceGrid
         balances={bobBalances}
@@ -30,6 +30,8 @@ describe('BalanceGrid', () => {
       />,
     );
 
-    expect(screen.getByText('No balances for this location')).toBeInTheDocument();
+    expect(
+      screen.getByText("No balances for this location"),
+    ).toBeInTheDocument();
   });
 });

@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import type { LeaveBalance, SyncStatus } from '@/types';
+import type { LeaveBalance, SyncStatus } from "@/types";
 
-import { BalanceCard } from './BalanceCard';
+import { BalanceCard } from "./BalanceCard";
 
 export interface BalanceGridProps {
   balances: LeaveBalance[];
@@ -10,7 +10,11 @@ export interface BalanceGridProps {
   locationId: string;
 }
 
-export function BalanceGrid({ balances, syncStatus, locationId }: BalanceGridProps) {
+export function BalanceGrid({
+  balances,
+  syncStatus,
+  locationId,
+}: BalanceGridProps) {
   const locationBalances = balances.filter((b) => b.locationId === locationId);
 
   if (locationBalances.length === 0) {

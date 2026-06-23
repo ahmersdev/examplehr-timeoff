@@ -1,8 +1,8 @@
-import type { QueryClient } from '@tanstack/react-query';
+import type { QueryClient } from "@tanstack/react-query";
 
-import type { LeaveBalance } from '@/types';
+import type { LeaveBalance } from "@/types";
 
-import { hcmKeys } from './query-keys';
+import { hcmKeys } from "./query-keys";
 
 function balanceCellKey(balance: LeaveBalance): string {
   return `${balance.locationId}:${balance.leaveType}`;
@@ -10,9 +10,7 @@ function balanceCellKey(balance: LeaveBalance): string {
 
 export function balancesMatch(a: LeaveBalance, b: LeaveBalance): boolean {
   return (
-    a.available === b.available &&
-    a.used === b.used &&
-    a.total === b.total
+    a.available === b.available && a.used === b.used && a.total === b.total
   );
 }
 
@@ -134,7 +132,9 @@ export function snapshotBalanceCache(
   leaveType: string,
 ): BalanceCacheSnapshot {
   return {
-    balances: queryClient.getQueryData<LeaveBalance[]>(hcmKeys.balances(employeeId)),
+    balances: queryClient.getQueryData<LeaveBalance[]>(
+      hcmKeys.balances(employeeId),
+    ),
     cell: queryClient.getQueryData<LeaveBalance>(
       hcmKeys.balance(employeeId, locationId, leaveType),
     ),

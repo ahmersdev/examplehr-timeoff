@@ -1,4 +1,4 @@
-import { http, HttpResponse, type RequestHandler } from 'msw';
+import { http, HttpResponse, type RequestHandler } from "msw";
 
 import {
   addAnnualBonus,
@@ -11,35 +11,38 @@ import {
   getRequestsByEmployee,
   restoreBalance,
   updateRequest,
-} from '@/app/api/hcm/_lib/state';
-import { serializeBalance, serializeRequest } from '@/app/api/hcm/_lib/serializers';
+} from "@/app/api/hcm/_lib/state";
+import {
+  serializeBalance,
+  serializeRequest,
+} from "@/app/api/hcm/_lib/serializers";
 import {
   parseAnniversaryBody,
   parseBalanceRequestBody,
   validateBalanceQueryParams,
   validateDimension,
-} from '@/app/api/hcm/_lib/validators';
-import { sleep, staleAvailable } from '@/app/api/hcm/_lib/utils';
+} from "@/app/api/hcm/_lib/validators";
+import { sleep, staleAvailable } from "@/app/api/hcm/_lib/utils";
 
 export type HcmHandlerMode =
-  | 'default'
-  | 'loading'
-  | 'errors'
-  | 'stale'
-  | 'silent-failure'
-  | 'insufficient-balance'
-  | 'anniversary-bonus';
+  | "default"
+  | "loading"
+  | "errors"
+  | "stale"
+  | "silent-failure"
+  | "insufficient-balance"
+  | "anniversary-bonus";
 
 const SERVICE_UNAVAILABLE = {
-  code: 'SERVICE_UNAVAILABLE',
-  message: 'HCM service unavailable',
+  code: "SERVICE_UNAVAILABLE",
+  message: "HCM service unavailable",
 } as const;
 
 async function applyLatency(mode: HcmHandlerMode): Promise<void> {
-  if (mode === 'loading') {
+  if (mode === "loading") {
     await new Promise(() => {});
   }
-  if (mode === 'default') {
+  if (mode === "default") {
     await sleep(10, 30);
   }
 }
@@ -60,7 +63,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
   const anniversaryApplied = new Set<string>();
 
   function trackBalanceRead(employeeId: string): void {
-    if (mode !== 'anniversary-bonus') return;
+    if (mode !== "anniversary-bonus") return;
     const count = (balanceReadCounts.get(employeeId) ?? 0) + 1;
     balanceReadCounts.set(employeeId, count);
     if (count >= 2 && !anniversaryApplied.has(employeeId)) {
@@ -70,20 +73,27 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
   }
 
   return [
-    http.get('/api/hcm/balance', async ({ request }) => {
-      if (mode === 'errors') {
+    http.get("/api/hcm/balance", async ({ request }) => {
+      if (mode === "errors") {
         return HttpResponse.json(
-          { code: 'SERVICE_UNAVAILABLE', message: 'HCM balance sync unavailable' },
+          {
+            code: "SERVICE_UNAVAILABLE",
+            message: "HCM balance sync unavailable",
+          },
           { status: 503 },
         );
       }
 
       const url = new URL(request.url);
-      const employeeId = url.searchParams.get('employeeId');
-      const locationId = url.searchParams.get('locationId');
-      const leaveType = url.searchParams.get('leaveType');
+      const employeeId = url.searchParams.get("employeeId");
+      const locationId = url.searchParams.get("locationId");
+      const leaveType = url.searchParams.get("leaveType");
 
-      const paramError = validateBalanceQueryParams(employeeId, locationId, leaveType);
+      const paramError = validateBalanceQueryParams(
+        employeeId,
+        locationId,
+        leaveType,
+      );
       if (paramError) {
         return HttpResponse.json(paramError, { status: 400 });
       }
@@ -96,7 +106,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       const balance = getBalance(employeeId!, locationId!, leaveType!);
       if (!balance) {
         return HttpResponse.json(
-          { code: 'NOT_FOUND', message: 'Balance not found' },
+          { code: "NOT_FOUND", message: "Balance not found" },
           { status: 404 },
         );
       }
@@ -104,24 +114,27 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       trackBalanceRead(employeeId!);
       await applyLatency(mode);
 
-      if (mode === 'stale') {
+      if (mode === "stale") {
         return HttpResponse.json(staleBalance(balance));
       }
 
       return HttpResponse.json(serializeBalance(balance));
     }),
 
-    http.get('/api/hcm/balances', async () => {
-      if (mode === 'errors') {
+    http.get("/api/hcm/balances", async () => {
+      if (mode === "errors") {
         return HttpResponse.json(
-          { code: 'SERVICE_UNAVAILABLE', message: 'HCM batch sync unavailable' },
+          {
+            code: "SERVICE_UNAVAILABLE",
+            message: "HCM batch sync unavailable",
+          },
           { status: 503 },
         );
       }
 
       await applyLatency(mode);
 
-      if (mode === 'stale') {
+      if (mode === "stale") {
         const balances = getAllBalances().map((b) => staleBalance(b)!);
         return HttpResponse.json({ balances });
       }
@@ -130,31 +143,38 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       return HttpResponse.json({ balances });
     }),
 
-    http.get('/api/hcm/requests', ({ request }) => {
+    http.get("/api/hcm/requests", ({ request }) => {
       const url = new URL(request.url);
-      const employeeId = url.searchParams.get('employeeId');
-      const status = url.searchParams.get('status');
+      const employeeId = url.searchParams.get("employeeId");
+      const status = url.searchParams.get("status");
 
       if (employeeId) {
-        const requests = getRequestsByEmployee(employeeId).map(serializeRequest);
+        const requests =
+          getRequestsByEmployee(employeeId).map(serializeRequest);
         return HttpResponse.json({ requests });
       }
 
-      if (status === 'pending') {
+      if (status === "pending") {
         const requests = getPendingRequests().map(serializeRequest);
         return HttpResponse.json({ requests });
       }
 
       return HttpResponse.json(
-        { code: 'INVALID_QUERY', message: 'Provide employeeId or status=pending' },
+        {
+          code: "INVALID_QUERY",
+          message: "Provide employeeId or status=pending",
+        },
         { status: 400 },
       );
     }),
 
-    http.post('/api/hcm/balance/request', async ({ request }) => {
-      if (mode === 'errors') {
+    http.post("/api/hcm/balance/request", async ({ request }) => {
+      if (mode === "errors") {
         return HttpResponse.json(
-          { code: 'SERVICE_UNAVAILABLE', message: 'HCM request submission unavailable' },
+          {
+            code: "SERVICE_UNAVAILABLE",
+            message: "HCM request submission unavailable",
+          },
           { status: 503 },
         );
       }
@@ -164,18 +184,19 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
         body = await request.json();
       } catch {
         return HttpResponse.json(
-          { code: 'INVALID_BODY', message: 'Invalid JSON body' },
+          { code: "INVALID_BODY", message: "Invalid JSON body" },
           { status: 400 },
         );
       }
 
       const parsed = parseBalanceRequestBody(body);
-      if ('error' in parsed) {
-        const status = parsed.error.code === 'NOT_FOUND' ? 404 : 400;
+      if ("error" in parsed) {
+        const status = parsed.error.code === "NOT_FOUND" ? 404 : 400;
         return HttpResponse.json(parsed.error, { status });
       }
 
-      const { employeeId, locationId, leaveType, startDate, endDate, days } = parsed.data;
+      const { employeeId, locationId, leaveType, startDate, endDate, days } =
+        parsed.data;
 
       const dimensionError = validateDimension(locationId, leaveType);
       if (dimensionError) {
@@ -185,15 +206,15 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       const balance = getBalance(employeeId, locationId, leaveType);
       if (!balance) {
         return HttpResponse.json(
-          { code: 'NOT_FOUND', message: 'Balance not found' },
+          { code: "NOT_FOUND", message: "Balance not found" },
           { status: 404 },
         );
       }
 
-      if (mode === 'insufficient-balance' || days > balance.available) {
+      if (mode === "insufficient-balance" || days > balance.available) {
         return HttpResponse.json(
           {
-            code: 'INSUFFICIENT_BALANCE',
+            code: "INSUFFICIENT_BALANCE",
             message: `Requested ${days} days but only ${balance.available} available`,
           },
           { status: 422 },
@@ -211,15 +232,15 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
         days,
       });
 
-      if (mode !== 'silent-failure') {
+      if (mode !== "silent-failure") {
         deductBalance(employeeId, locationId, leaveType, days);
       }
 
       return HttpResponse.json(serializeRequest(timeOffRequest));
     }),
 
-    http.post('/api/hcm/request/:id/approve', async ({ params }) => {
-      if (mode === 'errors') {
+    http.post("/api/hcm/request/:id/approve", async ({ params }) => {
+      if (mode === "errors") {
         return HttpResponse.json(SERVICE_UNAVAILABLE, { status: 503 });
       }
 
@@ -228,15 +249,15 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
 
       if (!timeOffRequest) {
         return HttpResponse.json(
-          { code: 'NOT_FOUND', message: `Request not found: ${id}` },
+          { code: "NOT_FOUND", message: `Request not found: ${id}` },
           { status: 404 },
         );
       }
 
-      if (timeOffRequest.status !== 'pending') {
+      if (timeOffRequest.status !== "pending") {
         return HttpResponse.json(
           {
-            code: 'CONFLICT',
+            code: "CONFLICT",
             message: `Request ${id} is already ${timeOffRequest.status}`,
           },
           { status: 409 },
@@ -246,7 +267,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       await applyLatency(mode);
 
       const approved = updateRequest(id as string, {
-        status: 'approved',
+        status: "approved",
         resolvedAt: new Date().toISOString(),
       });
 
@@ -263,8 +284,8 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       });
     }),
 
-    http.post('/api/hcm/request/:id/deny', async ({ params, request }) => {
-      if (mode === 'errors') {
+    http.post("/api/hcm/request/:id/deny", async ({ params, request }) => {
+      if (mode === "errors") {
         return HttpResponse.json(SERVICE_UNAVAILABLE, { status: 503 });
       }
 
@@ -273,7 +294,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
 
       if (!timeOffRequest) {
         return HttpResponse.json(
-          { code: 'NOT_FOUND', message: `Request not found: ${id}` },
+          { code: "NOT_FOUND", message: `Request not found: ${id}` },
           { status: 404 },
         );
       }
@@ -281,9 +302,9 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       let rejectionReason: string | undefined;
       try {
         const body = await request.json();
-        if (body && typeof body === 'object' && 'rejectionReason' in body) {
+        if (body && typeof body === "object" && "rejectionReason" in body) {
           const reason = (body as Record<string, unknown>).rejectionReason;
-          if (typeof reason === 'string') {
+          if (typeof reason === "string") {
             rejectionReason = reason;
           }
         }
@@ -291,7 +312,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
         // empty body is fine
       }
 
-      if (timeOffRequest.status === 'pending') {
+      if (timeOffRequest.status === "pending") {
         restoreBalance(
           timeOffRequest.employeeId,
           timeOffRequest.locationId,
@@ -301,7 +322,7 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       }
 
       const denied = updateRequest(id as string, {
-        status: 'denied',
+        status: "denied",
         resolvedAt: new Date().toISOString(),
         rejectionReason,
       });
@@ -320,8 +341,8 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
       });
     }),
 
-    http.post('/api/hcm/trigger-anniversary', async ({ request }) => {
-      if (mode === 'errors') {
+    http.post("/api/hcm/trigger-anniversary", async ({ request }) => {
+      if (mode === "errors") {
         return HttpResponse.json(SERVICE_UNAVAILABLE, { status: 503 });
       }
 
@@ -330,21 +351,24 @@ export function createHcmHandlers(mode: HcmHandlerMode): RequestHandler[] {
         body = await request.json();
       } catch {
         return HttpResponse.json(
-          { code: 'INVALID_BODY', message: 'Invalid JSON body' },
+          { code: "INVALID_BODY", message: "Invalid JSON body" },
           { status: 400 },
         );
       }
 
       const parsed = parseAnniversaryBody(body);
-      if ('error' in parsed) {
-        const status = parsed.error.code === 'NOT_FOUND' ? 404 : 400;
+      if ("error" in parsed) {
+        const status = parsed.error.code === "NOT_FOUND" ? 404 : 400;
         return HttpResponse.json(parsed.error, { status });
       }
 
       const balance = addAnnualBonus(parsed.employeeId, 2);
       if (!balance) {
         return HttpResponse.json(
-          { code: 'NOT_FOUND', message: 'Annual balance not found for employee' },
+          {
+            code: "NOT_FOUND",
+            message: "Annual balance not found for employee",
+          },
           { status: 404 },
         );
       }

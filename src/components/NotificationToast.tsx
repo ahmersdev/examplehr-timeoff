@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import type { AppNotification } from '@/store/useAppStore';
+import type { AppNotification } from "@/store/useAppStore";
 
 export interface NotificationToastProps {
   notifications: AppNotification[];
   onDismiss: (id: string) => void;
 }
 
-const TYPE_BORDER: Record<AppNotification['type'], string> = {
-  info: 'border-l-blue-500',
-  warning: 'border-l-yellow-500',
-  error: 'border-l-red-500',
+const TYPE_BORDER: Record<AppNotification["type"], string> = {
+  info: "border-l-blue-500",
+  warning: "border-l-yellow-500",
+  error: "border-l-red-500",
 };
 
 const AUTO_DISMISS_MS = 5_000;
@@ -25,7 +25,7 @@ function ToastItem({
   onDismiss: (id: string) => void;
 }) {
   useEffect(() => {
-    if (notification.type === 'warning') return;
+    if (notification.type === "warning") return;
 
     const timer = setTimeout(() => {
       onDismiss(notification.id);
@@ -39,7 +39,9 @@ function ToastItem({
       role="alert"
       className={`flex items-start justify-between gap-3 rounded-md border border-zinc-200 border-l-4 bg-white p-3 shadow-lg dark:border-zinc-700 dark:bg-zinc-900 ${TYPE_BORDER[notification.type]}`}
     >
-      <p className="text-sm text-zinc-800 dark:text-zinc-200">{notification.message}</p>
+      <p className="text-sm text-zinc-800 dark:text-zinc-200">
+        {notification.message}
+      </p>
       <button
         type="button"
         onClick={() => onDismiss(notification.id)}
@@ -52,7 +54,10 @@ function ToastItem({
   );
 }
 
-export function NotificationToast({ notifications, onDismiss }: NotificationToastProps) {
+export function NotificationToast({
+  notifications,
+  onDismiss,
+}: NotificationToastProps) {
   const active = notifications.filter((n) => !n.dismissedAt);
 
   if (active.length === 0) return null;

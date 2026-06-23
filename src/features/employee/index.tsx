@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect } from 'react';
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect } from "react";
 
 import {
   BackToHome,
@@ -9,35 +9,42 @@ import {
   NotificationToast,
   RequestCard,
   RequestForm,
-} from '@/components';
-import type { SubmitRequestInput } from '@/lib/api/hcm';
+  SectionSpinner,
+} from "@/components";
+import type { SubmitRequestInput } from "@/lib/api/hcm";
 import {
   useBalances,
   useReconciliation,
   useRequests,
   useSubmitRequest,
-} from '@/lib/hooks';
-import { useAppStore, useCurrentUser } from '@/store/useAppStore';
-import type { TimeOffRequest } from '@/types';
+} from "@/lib/hooks";
+import { useAppStore, useCurrentUser } from "@/store/useAppStore";
+import type { TimeOffRequest } from "@/types";
 
 const Employee = () => {
   const router = useRouter();
   const currentUser = useCurrentUser();
   const addPendingRequest = useAppStore((s) => s.addPendingRequest);
-  const setRequestBalanceSnapshot = useAppStore((s) => s.setRequestBalanceSnapshot);
+  const setRequestBalanceSnapshot = useAppStore(
+    (s) => s.setRequestBalanceSnapshot,
+  );
   const notifications = useAppStore((s) => s.notifications);
   const dismissNotification = useAppStore((s) => s.dismissNotification);
 
-  const employeeId = currentUser?.id ?? '';
+  const employeeId = currentUser?.id ?? "";
   const { balances, syncStatus, isLoading } = useBalances(employeeId);
-  const { requests, refetch: refetchRequests } = useRequests(employeeId);
+  const {
+    requests,
+    isLoading: isLoadingRequests,
+    refetch: refetchRequests,
+  } = useRequests(employeeId);
   const { submitAsync, isOptimistic, isRolledBack, reset } = useSubmitRequest();
 
   useReconciliation(employeeId);
 
   useEffect(() => {
     if (!currentUser) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [currentUser, router]);
 
@@ -46,7 +53,8 @@ const Employee = () => {
       reset();
 
       const balanceBefore = balances.find(
-        (b) => b.locationId === input.locationId && b.leaveType === input.leaveType,
+        (b) =>
+          b.locationId === input.locationId && b.leaveType === input.leaveType,
       );
       const expectedAvailable = (balanceBefore?.available ?? 0) - input.days;
 
@@ -94,7 +102,7 @@ const Employee = () => {
           Balances
         </h2>
         {isLoading ? (
-          <p className="text-sm text-zinc-500">Loading balances…</p>
+          <SectionSpinner label="Loading balances" />
         ) : (
           <BalanceGrid
             balances={balances}
@@ -127,7 +135,9 @@ const Employee = () => {
         <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
           Request History
         </h2>
-        {requests.length === 0 && !isOptimistic ? (
+        {isLoadingRequests ? (
+          <SectionSpinner label="Loading request history" />
+        ) : requests.length === 0 && !isOptimistic ? (
           <p className="text-sm text-zinc-500">No requests yet.</p>
         ) : (
           <div className="space-y-4">
@@ -135,15 +145,15 @@ const Employee = () => {
               <RequestCard
                 request={
                   {
-                    id: 'optimistic',
+                    id: "optimistic",
                     employeeId: currentUser.id,
                     locationId: currentUser.locationId,
-                    leaveType: locationBalances[0]?.leaveType ?? 'annual',
-                    startDate: '',
-                    endDate: '',
+                    leaveType: locationBalances[0]?.leaveType ?? "annual",
+                    startDate: "",
+                    endDate: "",
                     days: 0,
-                    status: 'pending',
-                    optimisticStatus: 'pending_submission',
+                    status: "pending",
+                    optimisticStatus: "pending_submission",
                     submittedAt: new Date().toISOString(),
                   } satisfies TimeOffRequest
                 }

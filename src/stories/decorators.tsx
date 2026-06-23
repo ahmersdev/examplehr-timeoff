@@ -1,13 +1,17 @@
-import type { Decorator } from '@storybook/nextjs-vite';
-import { useEffect } from 'react';
+import type { Decorator } from "@storybook/nextjs-vite";
+import { useEffect } from "react";
 
-import { DEMO_EMPLOYEE, DEMO_MANAGER } from '@/lib/demo-users';
-import { setBalancesInCache } from '@/lib/hooks/balance-cache';
-import { getQueryClient } from '@/lib/queryClient';
-import { useAppStore } from '@/store/useAppStore';
+import { DEMO_EMPLOYEE, DEMO_MANAGER } from "@/lib/demo-users";
+import { setBalancesInCache } from "@/lib/hooks/balance-cache";
+import { getQueryClient } from "@/lib/queryClient";
+import { useAppStore } from "@/store/useAppStore";
 
-import { bobBalances } from './fixtures';
-import { resetStoryEnvironment, seedBalanceSnapshot, seedPendingRequest } from './helpers';
+import { bobBalances } from "./fixtures";
+import {
+  resetStoryEnvironment,
+  seedBalanceSnapshot,
+  seedPendingRequest,
+} from "./helpers";
 
 export const withStoryReset: Decorator = (Story) => {
   resetStoryEnvironment();
@@ -29,16 +33,16 @@ export const withSeededBobBalances: Decorator = (Story) => {
   return <Story />;
 };
 
-export function withSeededManagerQueue(
-  options?: { snapshotAvailable?: number },
-): Decorator {
+export function withSeededManagerQueue(options?: {
+  snapshotAvailable?: number;
+}): Decorator {
   function SeededManagerQueueDecorator(Story: Parameters<Decorator>[0]) {
     const request = seedPendingRequest({
-      employeeId: 'emp-bob',
-      locationId: 'loc-london',
-      leaveType: 'annual',
-      startDate: '2026-08-01',
-      endDate: '2026-08-03',
+      employeeId: "emp-bob",
+      locationId: "loc-london",
+      leaveType: "annual",
+      startDate: "2026-08-01",
+      endDate: "2026-08-03",
       days: 3,
     });
 
@@ -52,17 +56,17 @@ export function withSeededManagerQueue(
   return SeededManagerQueueDecorator;
 }
 
-export function withSeededManagerQueueEffect(
-  options?: { snapshotAvailable?: number },
-): Decorator {
+export function withSeededManagerQueueEffect(options?: {
+  snapshotAvailable?: number;
+}): Decorator {
   function SeededManagerQueueEffectDecorator(Story: Parameters<Decorator>[0]) {
     useEffect(() => {
       const request = seedPendingRequest({
-        employeeId: 'emp-bob',
-        locationId: 'loc-london',
-        leaveType: 'annual',
-        startDate: '2026-08-01',
-        endDate: '2026-08-03',
+        employeeId: "emp-bob",
+        locationId: "loc-london",
+        leaveType: "annual",
+        startDate: "2026-08-01",
+        endDate: "2026-08-03",
         days: 3,
       });
 
