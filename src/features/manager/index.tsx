@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import {
+  BackToHome,
   ManagerRequestQueue,
   NotificationToast,
   SyncStatusBar,
@@ -194,6 +195,7 @@ const Manager = () => {
 
       <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-6">
         <header>
+          <BackToHome />
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
             Manager Queue
           </h1>

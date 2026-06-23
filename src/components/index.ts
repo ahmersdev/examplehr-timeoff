@@ -1,3 +1,4 @@
+export { BackToHome } from './BackToHome';
 export { BalanceCard, type BalanceCardProps } from './BalanceCard';
 export { BalanceGrid, type BalanceGridProps } from './BalanceGrid';
 export { RequestForm, type RequestFormProps } from './RequestForm';

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect } from 'react';
 
 import {
+  BackToHome,
   BalanceGrid,
   NotificationToast,
   RequestCard,
@@ -79,6 +80,7 @@ const Employee = () => {
   return (
     <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-8 p-6">
       <header>
+        <BackToHome />
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
           My Time Off
         </h1>

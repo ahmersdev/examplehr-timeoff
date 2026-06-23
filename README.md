@@ -27,7 +27,7 @@ Run Storybook interaction tests (headless Chromium):
 npm run test:storybook
 ```
 
-**Deployed Storybook:** _Coming soon — link will be added after deployment._
+**Deployed Storybook:** [https://examplehr-timeoff-seven.vercel.app/](https://examplehr-timeoff-seven.vercel.app/)
 
 ## Tests
 
@@ -40,16 +40,16 @@ Additional scripts: `npm run test:run` (all Vitest projects), `npm run test:unit
 
 ## Stack
 
-| Technology | Why |
-|------------|-----|
-| **Next.js 16 (App Router)** | Colocated UI and mock HCM route handlers in one project |
-| **React 19** | Current Next.js default; React Compiler enabled |
-| **TanStack Query v5** | Optimistic mutations, rollback, and reconciliation guards |
-| **Zustand** | Lightweight client state (user, toasts, snapshots) without provider boilerplate |
-| **MSW** | Same `/api/hcm/*` contract in tests and Storybook with scenario modes |
-| **Vitest + Testing Library** | Fast unit and integration tests with jsdom |
-| **Storybook 10** | Visual states, MSW scenarios, and play-function interaction tests |
-| **Tailwind CSS 4** | Utility-first styling |
-| **TypeScript** | End-to-end type safety |
+| Technology                   | Why                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------- |
+| **Next.js 16 (App Router)**  | Colocated UI and mock HCM route handlers in one project                         |
+| **React 19**                 | Current Next.js default; React Compiler enabled                                 |
+| **TanStack Query v5**        | Optimistic mutations, rollback, and reconciliation guards                       |
+| **Zustand**                  | Lightweight client state (user, toasts, snapshots) without provider boilerplate |
+| **MSW**                      | Same `/api/hcm/*` contract in tests and Storybook with scenario modes           |
+| **Vitest + Testing Library** | Fast unit and integration tests with jsdom                                      |
+| **Storybook 10**             | Visual states, MSW scenarios, and play-function interaction tests               |
+| **Tailwind CSS 4**           | Utility-first styling                                                           |
+| **TypeScript**               | End-to-end type safety                                                          |
 
 See [TRD.md](TRD.md) for full architecture rationale.
